@@ -1,17 +1,16 @@
-# Installing 64bit Linux on a 2006 iMac
+Forked from great tutorial of jmstriegel
 
-I have a vintage 20" iMac 5,1 (64-bit Core2Duo / 32-bit EFI) from 2006. These first generation Intel iMacs were absolutely lovely, and
+# Installing 32bit Linux on a 2006 iMac
+
+I have a vintage 17" iMac 4,1 (32-bit CoreDuo / 32-bit EFI) from 2006. These first generation Intel iMacs were absolutely lovely, and
 have the following specs:
 
-- 2.16 GHz Intel Core 2 Duo 64-bit processor
+- 2.0 GHz Intel Core Duo 32-bit processor
 - 3GB DDR2 SDRAM
 - 1680x1050 TFT Display
 - Radeon Mobility X1600 accelerated graphics with 128MB GDDR3 RAM
 - Built-in Ethernet and 802.11 wireless
 - Looks super cool
-
-This used to be a capable deskotp, but it's been a decade since Apple discontinued OS updates, rendering it mostly unusable in 2022.
-I wanted to keep this iMac from the landfill, so I restored it, replacing the hard drive with an SSD and installing modern 64-bit Linux.
 
 
 
@@ -22,10 +21,7 @@ Here's an overview of all the issues I came across.
 
 
 
-### 32-bit UEFI on a 64-bit computer
-
-The iMac 5,1 processor is a 64-bit Core2Duo and will run a 64-bit OS, however Macs of this generation (circa 2006 to 2007 or so) have a bizarre 32-bit EFI and consequently only support 32-bit EFI bootloader images.
-
+### 32-bit UEFI 
 The iMac's UEFI software also supports a legacy boot mode that presents a BIOS to the OS. I think this was originally intended for running Windows on the iMac in 2006. This happens to be particularly useful for Linux users in 2022!
 
 
@@ -43,45 +39,20 @@ If you want video acceleration, sleep/suspend, and power throttling to work prop
 | Boot Method           | OS             | Radeon driver
 | --------------------- | -------------- | -----------------
 | EFI (rEFInd 32)       | Linux (32 bit) | unaccelerated (nomodeset)
-| EFI (rEFInd 32)       | Linux (64 bit) | unaccelerated (nomodeset)
 | EFI (Grub EFI 32)     | Linux (32 bit) | unaccelerated (nomodeset)
-| EFI (Grub EFI 32)     | Linux (64 bit) | unaccelerated (nomodeset)
-| **Legacy (Grub in MBR)**  | **Linux (64 bit)** | **works!**
-| Legacy (Grub in MBR)  | Linux (32 bit) | works! (presumed, untested)
+| Legacy (Grub in MBR)  | Linux (32 bit) | works! (over refind)
 
-### Should I use 64-bit or 32-bit Linux?
-
-Another quirk with the iMac 5,1 is that it only supports a maximum of 3GB ram, using two 2GB modules (yes, you read that correctly).
-32-bit applications use a bit less RAM than their 64-bit counterparts, so an argument could be made to stick with 32-bit Linux.
-One issue, however, is that official package support for 32-bit systems is dwindling. Chromium, for example, ended official 32-bit
-builds in 2020.
-
-Despite being a bit more memory hungry, it seems 64-bit Linux is the best option in 2022.
 
 ### Should I dual boot?
 
-Don't bother. There was a reasonable argument for this in 2012, but there's no benefit to running MacOS Lion in 2022. Even for web browsing, 2012 Safari is basically unusable.
-
+You can do with refind. I  would suggest to do it, just to install refind and have a base to go back to, if everything goes bonkers. Snow Leopard.
 I recommend purchasing an affordable SATA SSD and replacing the old hard drive. A 500GB Crucial SATA SSD is cheap, everything will run MUCH faster, and you won't have to worry about accidentally losing something important from your old disk. An external USB enclosure for the old drive will allow you to access all the files from your original setup.
 
 
 
 ### Linux installer ISO issues
 
-Getting a 64-bit installer ISO to boot on this machine has become more complicated over the years. The 64-bit install ISOs for many Linux distributions no longer contain a boot image for 32-bit EFIs, nor do they typically support legacy BIOS booting from a master boot record (MBR). If you try to boot a 64-bit USB ISO and the drive doesn't appear in the boot menu, this is probably the reason!
-
-To make it as clear as possible, your install media needs to either:
-- boot in legacy MBR mode
-- or contain a 32-bit EFI image
-
-So, your ISO boot options are:
-- use a 32-bit distribution, which will support one of the above out of the box
-- hack the 64-bit ISO of your desired distribution to boot in MBR mode
-- use a 64-bit distribution that supports 32-bit EFIs, such as Debian's "multi-arch" ISO
-
-The first is straighforward. Just look for the i386 version when downloading the installer ISO.
-
-Matt Gadient has [detailed instructions](https://mattgadient.com/linux-dvd-images-and-how-to-for-32-bit-efi-macs-late-2006-models/) for converting 64-bit DVD ISOs to boot in MBR legacy mode. If you have a working DVD drive, this might be an option.
+Getting a installer ISO to boot on this machine has become more complicated over the years. USB boot doesnt work natively, so you you need refind, but only works in legacy mode.
 
 Debian has a ["multi-arch" ISO](https://cdimage.debian.org/debian-cd/current/multi-arch/iso-cd/
 ) that contains both 32-bit and 64-bit EFI images. This is both official and current (though maybe I should be concerned that it's not linked from the downloads page)... I'll be using this and preparing a USB thumb drive from another computer.
@@ -156,8 +127,10 @@ Use your favorite disk imaging method or just use the unix 'dd' to write the ISO
 dd if=debian-11.4.0-amd64-i386-netinst.iso of=/dev/sdX bs=1M status=progress
 ```
 
-Boot your iMac with the USB drive plugged in and hold down the option key. It should appear as an EFI bootable removable disk. Grub will load and you can begin the Debian installer. My USB stick takes absolutely forever to boot, so be patient even if it appears to be locked up.
-
+## install snow leopard through dvd, create bootcamp partition and install refind 
+Install Snow Leopard, create a bootcamp partition. Decrease the size of the bootcamp partition with disk utility to allow small partition for swap space for linux (5 Gb should do). 
+Install refind.
+Boot your iMac with the USB drive plugged in. It should appear as an EFI bootable removable disk in refind. Choose legacy. Grub will load and you can begin the Debian installer.
 
 
 ### Ethernet is required during installation
@@ -171,35 +144,15 @@ It's proabably also advisable to use a USB mouse until after installation when t
 
 
 ### Formatting the new drive for legacy boot
-
-By default, Debian might want to format the drive with a GPT partitioning scheme. This is not what you want for legacy BIOS mode. Instead, you'll want to manually partition the drive with legacy "msdos" style partitions.
-
-The first partition will hold necessary boot files: the kernel, init ramdisk, and grub. In an MBR partitioning scheme, the MBR sits right in front of this partition as well. I think it only needs to be in the first 2GB for the legacy bootloader to find it, but it's recommended to place this partition first. It doesn't need to be large. I configured mine with 500MB.
-
-Creating a generous partition for swap, since it's difficult to resize this later. I recommend 2 times the maximum size of RAM you'll ever be likely to install. If you ever want to enable hibernation, this will make that task easy.
-
-The final partition can fill the remainder of the disk. It will be formatted ext4 and will be the root filesystem mounted on /.
-
-| Partition     | Size   | Type  | Flags  | Mount point
-| ------------- | ------ | ----- | ------ | ------------
-| /dev/sda1     | 500MB  | ext4  | boot   | /boot
-| /dev/sda2     | 8GB    | swap  |        |
-| /dev/sda3     | +100%  | ext4  |        | /
-
+Start the installer of debian. When reached partition choose manual and create two partitions: 
+1. format bootcamp partition to hold /
+2. format swap partition to swap (huhhhu)
 
 ### Complete installation and reboot to Grub
 
-The Debian installer should install Grub to the MBR if your drive was formatted correctly. It may warn you that the system booted in EFI mode but you are installing in legacy MBR mode. That's what you want, so you can safely allow it to proceed.
+AT THE END OF THE INSTALLATION, MAKE SURE TO MANUALLY ENTER /dev/sda3 AS LOCATION TO INSTALL GRUB
 
 Reboot and remove the USB drive. When the iMac chimes, hold down the option key. You should see a hard disk icon appear, with the strange word "Windows" written beneath. Close your eyes, imagine "Linux" and hit enter to boot into the Grub menu.
-
-**NOTE: If you don't see the disk or Grub doesn't load...**
-It's possible the drive wasn't correctly partitioned or grub failed to install correctly to the MBR. Reboot with the USB install disk and choose "Graphical Rescue Mode" mode in the Grub "Advanced Options". Select your root partition (Ie. /dev/sda3 or wherever you put /). From here you can inspect your drive's partition information. If you screwed up, recreate the correct partition table and start the installation process over.
-
-If the partition information looks alright, it might just be that grub didn't install correctly.  In the recovery menu, you can "Execute a shell in /dev/sda3". At the shell prompt, run `grub-install /dev/sda` to attempt to reinstall grub correctly to the MBR. Exit, reboot, and hit option again to select to boot from the hard disk.
-
-
-
 
 ### First boot and fixing a boot options
 
@@ -219,8 +172,6 @@ Later, when you're done with installing everything and you've confirmed sudo is 
 sudo passwd -l root
 ```
 
-
-
 #### Disable Wayland
 
 Wayland has very serious glitching issues with this video hardware once acceleration is working. Oddly, the mouse cursor appears fine, but the background textures in gdm and other user interface elements are glitchy and smeared about the screen. There must be something Wayland is using that is not supported by the hardware. XOrg runs almost perfectly, however, so you can just disable Wayland and pretend you didn't see this.
@@ -230,7 +181,6 @@ Edit /etc/gmd3/daemon.conf and remove the comment from the following line:
 ```
 WaylandEnable=false
 ```
-
 
 #### Install nonfree firmware and drivers for Radeon Mobilty X1600 and b43 802.11 wireless.
 
@@ -303,7 +253,10 @@ After reboot, you can use the pre-installed "Cheese" program to test your camera
 
 #### Reboot
 
-Reboot your iMac and almost everything should be working now. Here are some things to confirm:
+Reboot your iMac. Refind should start and youn should be able to choose legacy debian (one of three in my bootmenu) and almost everything should be working now. 
+Reboot again and cleanup refind bootmenu by choosing bootentry you are NOT using and choose '-'. Refind asks you to hide it. Maybe you should go to refind.conf and uncomment showtools hidden_tags
+
+Here are some things to confirm:
 
   - Xorg should have booted properly. If the screen looks really corrupted, see above about disabling Wayland.
   - Run `sudo dmesg |grep drm` and confirm the accelerated video card driver is now functioning. You should see a message about modesetting being enabled, as well as a bunch of other information about the graphics card (detected as an RV530).
@@ -398,6 +351,43 @@ The gdm logo setting is in /etc/gdm3/greeter.dconf-defaults. Edit this file and 
 ```
 logo=''
 ```
+
+
+## Cleaning up and have some nive tweaks while booting (files are uploaded in the code repository)
+
+To get a slick minimalistic bootup experience you can skin refind with minimal theme, and install plymouth theme macos inspired with debian logo
+refind-minimal:
+https://github.com/evanpurkhiser/rEFInd-minimal
+
+Darwin plymouth gives a nice tutorial to get it working. There is a debian logo fork from this.
+https://github.com/libredeb/darwin-plymouth
+So the code for the debian logo that works in the same way.
+https://www.gnome-look.org/p/1888173/
+
+#clean up boot to make sure you get minimal blinking cursors, boot messages and such
+your /etc/default/grub should look like this
+
+GRUB_DEFAULT=0
+GRUB_TIMEOUT=0
+GRUB_HIDDEN_TIMEOUT="0"
+GRUB_HIDDEN_TIMEOUT_QUIET=true
+GRUB_BACKGROUND=""
+GRUB_DISTRIBUTOR=`lsb_release -i -s 2> /dev/null || echo Debian`
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash radeon.dpm=1 radeon.modeset=1 radeon.p>
+GRUB_DISABLE_OS_PROBER="true"
+
+...
+sudo nano /etd/default/grub
+...
+
+Paste the above in the grub
+<ctri> <shift> v
+<ctrl> x and y
+
+...
+sudo update-grub
+...
+
 
 
 ## Done
