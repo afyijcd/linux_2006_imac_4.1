@@ -385,8 +385,17 @@ Paste the above in the grub
 <ctrl> x and y
 
 ```
+sed -i 's/^quiet_boot="0"/quiet_boot="1"/g' /etc/grub.d/10_linux
+```
+  
+  
+  
+```
 sudo update-grub
 ```
+
+  
+https://unix.stackexchange.com/questions/527886/hide-grub-menu-and-initial-loading-message
 
 
 
@@ -401,3 +410,4 @@ Performance-wise, it's an enjoyable computer in 2022. It's showing it's age in a
   
 ## Afterthoughts
 It took me a while to get to finally get rid of the "loading Grub... Welcome to grub" messages at boot. Seems hard coded in the source of debian. So I uninstalled grub-pc and different other grtub packages. I change /etc/apt/sources.list to ubuntu bionic mirror (temporarily). Reinstalled the ubuntu grub-packages (to sda3!) and apt-mark hold the packages to prevent them from upgrading after I put debian mirror back. Real ugly hack.
+Note: grub-shusher didn't work for me.
