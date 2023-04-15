@@ -364,6 +364,11 @@ https://github.com/libredeb/darwin-plymouth
 So the code for the debian logo that works in the same way.
 https://www.gnome-look.org/p/1888173/
 
+To prevent deafult debian branding showing up in the screen, you have to fix debian-logs in desktop-base
+
+```
+sudo mv /usr/share/desktop-base/debian-logos /usr/share/desktop-base/debian-logos.bak
+```
 #clean up boot to make sure you get minimal blinking cursors, boot messages and such
 your /etc/default/grub should look like this
 
