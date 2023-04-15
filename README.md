@@ -376,17 +376,17 @@ GRUB_DISTRIBUTOR=`lsb_release -i -s 2> /dev/null || echo Debian`
 GRUB_CMDLINE_LINUX_DEFAULT="quiet splash radeon.dpm=1 radeon.modeset=1 radeon.p>
 GRUB_DISABLE_OS_PROBER="true"
 
-...
+```
 sudo nano /etd/default/grub
-...
+```
 
 Paste the above in the grub
 <ctri> <shift> v
 <ctrl> x and y
 
-...
+```
 sudo update-grub
-...
+```
 
 
 
