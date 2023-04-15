@@ -45,7 +45,7 @@ If you want video acceleration, sleep/suspend, and power throttling to work prop
 
 ### Should I dual boot?
 
-You can do with refind. I  would suggest to do it, just to install refind and have a base to go back to, if everything goes bonkers. Snow Leopard.
+You can do with Snow Leopard and refind. I  would suggest to do it, just to install refind and have a base to go back to, if everything goes bonkers. You need a Snow Leopard DVD.
 I recommend purchasing an affordable SATA SSD and replacing the old hard drive. A 500GB Crucial SATA SSD is cheap, everything will run MUCH faster, and you won't have to worry about accidentally losing something important from your old disk. An external USB enclosure for the old drive will allow you to access all the files from your original setup.
 
 
