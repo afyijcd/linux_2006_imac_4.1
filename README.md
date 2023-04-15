@@ -395,3 +395,9 @@ sudo update-grub
 That's about everything.  Reboot and enjoy your new 2022 iMac 4,1. Web Browsing, Email, Multimedia -- all the things!
 
 Performance-wise, it's an enjoyable computer in 2022. It's showing it's age in a few places, of course: you might encounter an occasional video driver glitch. Fullscreen youtube is not great. However, Youtube works quite well in a window or theater mode. Aside from these small gripes, it's a fun computer to use. Thanks to the SSD upgrade, many things even seem faster than when this iMac was new.
+
+  
+  
+  
+## Afterthoughts
+It took me a while to get to finally get rid of the "loading Grub... Welcome to grub" messages at boot. Seems hard coded in the source of debian. So I uninstalled grub-pc and different other grtub packages. I change /etc/apt/sources.list to ubuntu bionic mirror (temporarily). Reinstalled the ubuntu grub-packages (to sda3!) and apt-mark hold the packages to prevent them from upgrading after I put debian mirror back. Real ugly hack.
