@@ -392,6 +392,6 @@ sudo update-grub
 
 ## Done
 
-That's about everything.  Reboot and enjoy your new 2022 iMac 5,1. Web Browsing, Email, Multimedia -- all the things!
+That's about everything.  Reboot and enjoy your new 2022 iMac 4,1. Web Browsing, Email, Multimedia -- all the things!
 
 Performance-wise, it's an enjoyable computer in 2022. It's showing it's age in a few places, of course: you might encounter an occasional video driver glitch. Fullscreen youtube is not great. However, Youtube works quite well in a window or theater mode. Aside from these small gripes, it's a fun computer to use. Thanks to the SSD upgrade, many things even seem faster than when this iMac was new.
