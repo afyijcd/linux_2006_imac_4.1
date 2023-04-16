@@ -176,7 +176,7 @@ sudo passwd -l root
 
 Wayland has very serious glitching issues with this video hardware once acceleration is working. Oddly, the mouse cursor appears fine, but the background textures in gdm and other user interface elements are glitchy and smeared about the screen. There must be something Wayland is using that is not supported by the hardware. XOrg runs almost perfectly, however, so you can just disable Wayland and pretend you didn't see this.
 
-Edit /etc/gmd3/daemon.conf and remove the comment from the following line:
+Edit /etc/gdm3/daemon.conf and remove the comment from the following line:
 
 ```
 WaylandEnable=false
@@ -217,7 +217,14 @@ apt-get install firmware-b43-installer
 Now edit /etc/default/grub and change the GRUB_CMDLINE_LINUX_DEFAULT to add "radeon.dpm=1 radeon.modeset=1 radeon.pcie_gen2=0". Mine looks like this:
 
 ```
-GRUB_CMDLINE_LINUX_DEFAULT="quiet radeon.dpm=1 radeon.modeset=1 radeon.pcie_gen2=0"
+GRUB_DEFAULT=0
+GRUB_TIMEOUT=0
+GRUB_HIDDEN_TIMEOUT="0"
+GRUB_HIDDEN_TIMEOUT_QUIET=true
+GRUB_BACKGROUND=""
+GRUB_DISTRIBUTOR=`lsb_release -i -s 2> /dev/null || echo Debian`
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash radeon.dpm=1 radeon.modeset=1 radeon.pcie_gen2=0 loglevel=3 rd.systemd.show_status=auto rd.udev.log-priority=3 vt.global_cursor_default=0"
+GRUB_DISABLE_OS_PROBER="true"
 ```
 What those are for:
 
